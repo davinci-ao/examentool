@@ -1304,16 +1304,16 @@
         },
         {
             "name": "laravel/lumen-framework",
-            "version": "v5.7.0",
+            "version": "v5.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/lumen-framework.git",
-                "reference": "37f1e4a50650acf4c7bb8b754a8801e4741c4994"
+                "reference": "23a16381565a658dd8d9e94cda577448297f5150"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/lumen-framework/zipball/37f1e4a50650acf4c7bb8b754a8801e4741c4994",
-                "reference": "37f1e4a50650acf4c7bb8b754a8801e4741c4994",
+                "url": "https://api.github.com/repos/laravel/lumen-framework/zipball/23a16381565a658dd8d9e94cda577448297f5150",
+                "reference": "23a16381565a658dd8d9e94cda577448297f5150",
                 "shasum": ""
             },
             "require": {
@@ -1383,7 +1383,7 @@
                 "laravel",
                 "lumen"
             ],
-            "time": "2018-09-10T19:46:53+00:00"
+            "time": "2018-09-17T21:08:32+00:00"
         },
         {
             "name": "mongodb/mongodb",

@@ -22,6 +22,6 @@ $router->get('/index', [
 $router->get('/view/{id}', [
     'uses' => 'DeterminedExamController@view'
 ]);
-$router->get('/add', [
-    'uses' => 'DeterminedExamController@add'
+$router->post('/add', [
+    'uses' => 'DeterminedExamController@create'
 ]);

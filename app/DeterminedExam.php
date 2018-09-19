@@ -27,6 +27,6 @@ class DeterminedExam extends Model implements AuthenticatableContract, Authoriza
      * @var array
      */
     protected $hidden = [
-        'password',
+        '',
     ];
 }

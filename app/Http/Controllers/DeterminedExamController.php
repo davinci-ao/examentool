@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\DeterminedExam;
+use http\Env\Request;
+
 class DeterminedExamController extends Controller
 {
     /**
@@ -16,16 +19,16 @@ class DeterminedExamController extends Controller
 
     public function index()
     {
-        //
+        return DeterminedExam::all();
     }
 
     public function view($id)
     {
-        
+        return DeterminedExam::find($id);
     }
 
-    public function add()
+    public function create(Request $request)
     {
-        //
+        return response()->json(DeterminedExam::create($request->all, 201));
     }
 }

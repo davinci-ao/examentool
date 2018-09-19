@@ -19,6 +19,11 @@ class DeterminedExamController extends Controller
         //
     }
 
+    public function view($id)
+    {
+        
+    }
+
     public function add()
     {
         //

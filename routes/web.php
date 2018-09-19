@@ -14,3 +14,14 @@
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
+
+// Routes for DeterminedExamController
+$router->get('/index', [
+    'uses' => 'DeterminedExamController@index'
+]);
+$router->get('/view/{id}', [
+    'uses' => 'DeterminedExamController@view'
+]);
+$router->get('/add', [
+    'uses' => 'DeterminedExamController@add'
+]);

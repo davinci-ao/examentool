@@ -29,6 +29,6 @@ class DeterminedExamController extends Controller
 
     public function create(Request $request)
     {
-        return response()->json(DeterminedExam::create($request->all, 201));
+        return response()->json(DeterminedExam::create($request->all(), 201));
     }
 }

@@ -17,32 +17,55 @@ class DeterminedExamController extends Controller
         //
     }
 
-   public function getAll()
-   {
-       if ($exams = DeterminedExam::get()) {
-           return response()->json($exams, 200);
-       } else {
-           return response()->json(array(), 500);
-       }
-   }
-
     /**
+     * Get all Exams.
+     *
      * @return \Illuminate\Http\JsonResponse
      */
-   public function getAllTrimmed()
-   {
-        //if db request is successfull
+    public function getAll()
+    {
+        //If can get all Exams
+       if ($exams = DeterminedExam::get()) {
+           //Return Exams, 200
+           return response()->json($exams, 200);
+       } else {
+           //Return 500
+           return response()->json(array(), 500);
+       }
+    }
+
+    /**
+     * Get all Exams, little data as possible.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getAllTrimmed()
+    {
+        //If can get all Exams
         if($data = DeterminedExam::select('_id', 'exam_title', 'exam_description', 'exam_cohort')->get()) {
-            //return data, 200
+            //return all trimmed Exams, 200
             return response()->json($data, 200);
         } else {
             //return 500
             return response()->json(array(), 500);
         }
-   }
+    }
 
-   public function getById($exam_id)
-   {
-
-   }
+    /**
+     * Find exam by id.
+     *
+     * @param $exam_id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getById($exam_id)
+    {
+        //If can find exam by id
+        if($data = DeterminedExam::find($exam_id)) {
+            //Return exam, 200
+            return response()->json($data, 200);
+        } else {
+            //Return 404
+            return response()->json(new \stdClass(),404);
+        }
+    }
 }

@@ -19,7 +19,11 @@ class DeterminedExamController extends Controller
 
    public function getAll()
    {
-       return response()->json(DeterminedExam::all());
+       if ($exams = DeterminedExam::get()) {
+           return response()->json($exams, 200);
+       } else {
+           return response()->json(array(), 500);
+       }
    }
 
    public function getAllTrimmed()

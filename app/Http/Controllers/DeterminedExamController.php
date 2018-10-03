@@ -29,14 +29,8 @@ class DeterminedExamController extends Controller
    {
         //if db request is successfull
         if($data = DeterminedExam::select('_id', 'exam_title', 'exam_description', 'exam_cohort')->get()) {
-            //If db request returned 0 lines
-            if($data->count() == 0) {
-                //return 404
-                return response()->json(array(), 404);
-            } else {
-                //return data, 200
-                return response()->json($data, 200);
-            }
+            //return data, 200
+            return response()->json($data, 200);
         } else {
             //return 500
             return response()->json(array(), 500);

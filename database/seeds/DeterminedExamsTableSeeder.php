@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class DerminedExamsTableSeeder extends Seeder
+class DeterminedExamsTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.

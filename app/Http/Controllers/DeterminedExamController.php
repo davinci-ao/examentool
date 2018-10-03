@@ -17,18 +17,18 @@ class DeterminedExamController extends Controller
         //
     }
 
-    public function index()
-    {
-        return DeterminedExam::all();
-    }
+   public function getAll()
+   {
 
-    public function view($id)
-    {
-        return DeterminedExam::find($id);
-    }
+   }
 
-    public function create(Request $request)
-    {
-        return response()->json(DeterminedExam::create($request->all(), 201));
-    }
+   public function getAllTrimmed()
+   {
+        
+   }
+
+   public function getById($exam_id)
+   {
+
+   }
 }

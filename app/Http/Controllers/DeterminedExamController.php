@@ -19,7 +19,7 @@ class DeterminedExamController extends Controller
 
    public function getAll()
    {
-
+       return response()->json(DeterminedExam::all());
    }
 
     /**

@@ -27,3 +27,7 @@ $router->get('/exams/full', [
 $router->get('/exam/{exam_id}', [
     'uses' => 'DeterminedExamController@getById'
 ]);
+
+$router->get('/exam/{exam_id}/start', [
+    'uses' => 'AssessmentController@startAssessment'
+]);

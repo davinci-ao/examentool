@@ -18,7 +18,7 @@ class FinalAssessment extends Model implements AuthenticatableContract, Authoriz
      * @var array
      */
     protected $fillable = [
-        '',
+        'exam_title', 'exam_description', 'exam_cohort', 'exam_rating_algorithms', 'exam_criteria', 'determined_exam_id'
     ];
 
     /**

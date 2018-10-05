@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\DeterminedExam;
-use http\Env\Request;
 
 class DeterminedExamController extends Controller
 {

@@ -27,7 +27,7 @@ class AssessmentController extends Controller
     public function startAssessment($exam_id)
     {
         //Find if exam exists
-        if($determined_exam = DeterminedExam::find($exam_id)) {
+        if($determined_exam = DeterminedExam::find($exam_id)->first()) {
 
             //Make final assessment
             $final_assessment = new FinalAssessment();
@@ -42,6 +42,7 @@ class AssessmentController extends Controller
             $final_assessment->exam_criteria  = $determined_exam->exam_criteria;
             $final_assessment->result = "";
             $final_assessment->finished = False;
+            $final_assessment->date = date("Y-m-d: H-i-s");
 
             //Insert Final assessment
             if($final_assessment->save()) {
@@ -57,6 +58,7 @@ class AssessmentController extends Controller
                 $assessment->exam_rating_algorithms = $final_assessment->exam_rating_algorithms;
                 $assessment->exam_criteria = $final_assessment->exam_criteria;
                 $assessment->finished = False;
+                $assessment->date = $final_assessment->date;
 
                 //Insert assessment
                 if($assessment->save()) {
@@ -78,12 +80,59 @@ class AssessmentController extends Controller
         }
     }
 
-    public function getFinalAssessments() {
-        
+    /**
+     * Get all FinalAssessments
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getAllFinalAssessments() {
+        if($data = FinalAssessment::all()) {
+            //return all trimmed Exams, 200
+            return response()->json($data, 200);
+        } else {
+            //return 500
+            return response()->json(array(), 500);
+        }
     }
 
+    /**
+     * Hook in on a running assessment
+     *
+     * @param $final_assessment_id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function hookInOnAssessment($final_assessment_id) {
+        if($final_assessment = FinalAssessment::find($final_assessment_id)->first()) {
 
+            if($final_assessment->finished == true){
+                return response()->json(array(), 403);
+            } else {
+                $assessment = new Assessment();
+
+                $assessment->exam_title = $final_assessment->exam_title;
+                $assessment->exam_description = $final_assessment->exam_description;
+                $assessment->student_number = $final_assessment->student_number;
+                $assessment->examinators = "";//Insert current user id or object when user system integrated!!
+                $assessment->exam_cohort = $final_assessment->exam_cohort;
+                $assessment->final_assessment_id = $final_assessment->_id;
+                $assessment->exam_rating_algorithms = $final_assessment->exam_rating_algorithms;
+                $assessment->exam_criteria = $final_assessment->exam_criteria;
+                $assessment->finished = False;
+                $assessment->date = $final_assessment->date;
+
+                //Insert assessment
+                if($assessment->save()) {
+                    //Return assessment
+                    return response()->json($assessment, 201);
+                } else {
+                    //Return 500, error saving
+                    return response()->json(array(), 500);
+                }
+            }
+
+        } else {
+            return response()->json(array(), 404);
+        }
     }
 
 }

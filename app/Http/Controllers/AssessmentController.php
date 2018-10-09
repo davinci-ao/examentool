@@ -27,7 +27,7 @@ class AssessmentController extends Controller
     public function startAssessment($exam_id)
     {
         //Find if exam exists
-        if($determined_exam = DeterminedExam::find($exam_id)->first()) {
+        if($determined_exam = DeterminedExam::find($exam_id)) {
 
             //Make final assessment
             $final_assessment = new FinalAssessment();
@@ -103,7 +103,7 @@ class AssessmentController extends Controller
      */
     public function hookInOnAssessment($final_assessment_id) {
         //Find FinalAssessment
-        if($final_assessment = FinalAssessment::find($final_assessment_id)->first()) {
+        if($final_assessment = FinalAssessment::find($final_assessment_id)) {
             //If FinalAssessment is finished, return 403
             if($final_assessment->finished == true){
                 return response()->json(array(), 403);

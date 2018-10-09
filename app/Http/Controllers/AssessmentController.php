@@ -78,4 +78,12 @@ class AssessmentController extends Controller
         }
     }
 
+    public function getFinalAssessments() {
+        
+    }
+
+    public function hookInOnAssessment($final_assessment_id) {
+
+    }
+
 }

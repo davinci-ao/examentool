@@ -16,6 +16,9 @@ class DeterminedExamsTableSeeder extends Seeder
         $algorithms->pass = "Algoritme voor voldoende";
         $algorithms->good = "Algoritme voor goed";
 
+        $exam_section_one = new stdClass();
+        $exam_section_one->title = "section_one";
+
         $exam_section_one_criteria_one = new stdClass();
         $exam_section_one_criteria_one->criteria_name = "Criteria 1";
         $exam_section_one_criteria_one->criteria_description = "Criteria 1 voor sectie 1, voor fail groep";
@@ -27,7 +30,10 @@ class DeterminedExamsTableSeeder extends Seeder
         $exam_section_one_criteria_two->criteria_description = "Criteria 2 voor sectie 1";
         $exam_section_one_criteria_two->rating_group = "pass";
         $exam_section_one_criteria_two->show_stopper = False;
+        $exam_section_one->criteria = array($exam_section_one_criteria_one, $exam_section_one_criteria_two);
 
+        $exam_section_two = new stdClass();
+        $exam_section_two->title = "section_two";
 
         $exam_section_two_criteria_one = new stdClass();
         $exam_section_two_criteria_one->criteria_name = "Show stopper";
@@ -40,6 +46,8 @@ class DeterminedExamsTableSeeder extends Seeder
         $exam_section_two_criteria_two->criteria_description = "Criteria van de \"good\" group";
         $exam_section_two_criteria_two->rating_group = "fail";
         $exam_section_two_criteria_two->show_stopper = True;
+        $exam_section_two->criteria = array($exam_section_two_criteria_one, $exam_section_two_criteria_two);
+
 
         $data = array(
             "exam_title" => "Examen 1",
@@ -47,8 +55,8 @@ class DeterminedExamsTableSeeder extends Seeder
             "exam_cohort" => 2016,
             "exam_rating_algorithms" => $algorithms,
             "exam_criteria" => Array(
-                "section_one" => array($exam_section_one_criteria_one, $exam_section_one_criteria_two),
-                "section_two" => array($exam_section_two_criteria_one, $exam_section_two_criteria_two)
+                $exam_section_one,
+                $exam_section_two
             )
         );
 

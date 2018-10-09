@@ -42,7 +42,7 @@ class AssessmentController extends Controller
             $final_assessment->exam_criteria  = $determined_exam->exam_criteria;
             $final_assessment->result = "";
             $final_assessment->finished = False;
-            $final_assessment->date = date("Y-m-d: H-i-s");
+            $final_assessment->date = date();
 
             //Insert Final assessment
             if($final_assessment->save()) {
@@ -102,13 +102,16 @@ class AssessmentController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function hookInOnAssessment($final_assessment_id) {
+        //Find FinalAssessment
         if($final_assessment = FinalAssessment::find($final_assessment_id)->first()) {
-
+            //If FinalAssessment is finished, return 403
             if($final_assessment->finished == true){
                 return response()->json(array(), 403);
             } else {
+                //Make empty assessment
                 $assessment = new Assessment();
 
+                //Set data in assessment
                 $assessment->exam_title = $final_assessment->exam_title;
                 $assessment->exam_description = $final_assessment->exam_description;
                 $assessment->student_number = $final_assessment->student_number;
@@ -129,8 +132,8 @@ class AssessmentController extends Controller
                     return response()->json(array(), 500);
                 }
             }
-
         } else {
+            //Return 404 if no FinalAssessment found
             return response()->json(array(), 404);
         }
     }

@@ -40,6 +40,8 @@ class AssessmentController extends Controller
             $final_assessment->determined_exam_id  = $determined_exam->_id;
             $final_assessment->exam_rating_algorithms  = $determined_exam->exam_rating_algorithms;
             $final_assessment->exam_criteria  = $determined_exam->exam_criteria;
+            $final_assessment->result = "";
+            $final_assessment->finished = False;
 
             //Insert Final assessment
             if($final_assessment->save()) {
@@ -54,6 +56,7 @@ class AssessmentController extends Controller
                 $assessment->final_assessment_id = $final_assessment->_id;
                 $assessment->exam_rating_algorithms = $final_assessment->exam_rating_algorithms;
                 $assessment->exam_criteria = $final_assessment->exam_criteria;
+                $assessment->finished = False;
 
                 //Insert assessment
                 if($assessment->save()) {

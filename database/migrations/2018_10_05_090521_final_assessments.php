@@ -23,6 +23,8 @@ class FinalAssessments extends Migration
             $collection->string('determined_exam_id');
             $collection->string('examinators');
             $collection->string('student_numer');
+            $collection->string('result');
+            $collection->boolean('finished');
         });
     }
 

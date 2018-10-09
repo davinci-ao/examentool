@@ -23,6 +23,7 @@ class Assessments extends Migration
             $collection->string('final_assessment_id');
             $collection->string('examinator');
             $collection->string('student_number');
+            $collection->boolean('finished');
         });
     }
 

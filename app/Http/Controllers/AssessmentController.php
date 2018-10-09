@@ -42,7 +42,7 @@ class AssessmentController extends Controller
             $final_assessment->exam_criteria  = $determined_exam->exam_criteria;
             $final_assessment->result = "";
             $final_assessment->finished = False;
-            $final_assessment->date = date();
+            $final_assessment->date = date("Y-m-d: H-i-s");
 
             //Insert Final assessment
             if($final_assessment->save()) {

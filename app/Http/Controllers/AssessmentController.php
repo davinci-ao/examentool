@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Assessment;
 use App\FinalAssessment;
 use App\DeterminedExam;
+use Illuminate\Http\Request;
 
 class AssessmentController extends Controller
 {
@@ -46,29 +47,7 @@ class AssessmentController extends Controller
 
             //Insert Final assessment
             if($final_assessment->save()) {
-                //Make copy of FinalAssessment for assessment file
-                $assessment = new Assessment();
-
-                $assessment->exam_title = $final_assessment->exam_title;
-                $assessment->exam_description = $final_assessment->exam_description;
-                $assessment->student_number = $final_assessment->student_number;
-                $assessment->examinators = "";//Insert current user id or object when user system integrated!!
-                $assessment->exam_cohort = $final_assessment->exam_cohort;
-                $assessment->final_assessment_id = $final_assessment->_id;
-                $assessment->exam_rating_algorithms = $final_assessment->exam_rating_algorithms;
-                $assessment->exam_criteria = $final_assessment->exam_criteria;
-                $assessment->finished = False;
-                $assessment->date = $final_assessment->date;
-
-                //Insert assessment
-                if($assessment->save()) {
-                    //Return assessment
-                    return response()->json($assessment, 201);
-                } else {
-                    //Return 500, error saving
-                    return response()->json(array(), 500);
-                }
-
+                return response()->json($final_assessment, 201);
             } else {
                 //Return 500, error saving
                 return response()->json(array(), 500);
@@ -96,39 +75,67 @@ class AssessmentController extends Controller
     }
 
     /**
-     * Hook in on a running assessment
+     * Join in on an Assessment
      *
      * @param $final_assessment_id
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
      */
-    public function hookInOnAssessment($final_assessment_id) {
+    public function joinAssessment($final_assessment_id, Request $request) {
+
+        //Get and validate request data
+        $request_data = $this->validate($request, [
+            'examinator_name' => 'required',
+        ]);
+
         //Find FinalAssessment
         if($final_assessment = FinalAssessment::find($final_assessment_id)) {
             //If FinalAssessment is finished, return 403
             if($final_assessment->finished == true){
                 return response()->json(array(), 403);
             } else {
-                //Make empty assessment
-                $assessment = new Assessment();
+                //Check if user already has an assessment for this Final Assessment
+                if($assessment = Assessment::where('examinator', '=', $request_data['examinator_name'])->get()) {
 
-                //Set data in assessment
-                $assessment->exam_title = $final_assessment->exam_title;
-                $assessment->exam_description = $final_assessment->exam_description;
-                $assessment->student_number = $final_assessment->student_number;
-                $assessment->examinators = "";//Insert current user id or object when user system integrated!!
-                $assessment->exam_cohort = $final_assessment->exam_cohort;
-                $assessment->final_assessment_id = $final_assessment->_id;
-                $assessment->exam_rating_algorithms = $final_assessment->exam_rating_algorithms;
-                $assessment->exam_criteria = $final_assessment->exam_criteria;
-                $assessment->finished = False;
-                $assessment->date = $final_assessment->date;
+                    //If no entries found
+                    if($assessment->count() == 0) {
+                        //Make empty assessment
+                        $assessment = new Assessment();
 
-                //Insert assessment
-                if($assessment->save()) {
-                    //Return assessment
-                    return response()->json($assessment, 201);
+                        //Set data in assessment
+                        $assessment->exam_title = $final_assessment->exam_title;
+                        $assessment->exam_description = $final_assessment->exam_description;
+                        $assessment->student_number = $final_assessment->student_number;
+                        $assessment->examinator = $request_data['examinator_name'];//Insert current user id or object when user system integrated!!
+                        $assessment->exam_cohort = $final_assessment->exam_cohort;
+                        $assessment->final_assessment_id = $final_assessment->_id;
+                        $assessment->exam_rating_algorithms = $final_assessment->exam_rating_algorithms;
+                        $assessment->exam_criteria = $final_assessment->exam_criteria;
+                        $assessment->finished = False;
+                        $assessment->date = $final_assessment->date;
+
+                        //Insert assessment
+                        if($assessment->save()) {
+                            //Update examinators araray in Final Assessment
+                            $examinators = $final_assessment->examinators;
+                            array_push($examinators, $request_data['examinator_name']);
+                            $final_assessment->examinators = $examinators;
+                            $final_assessment->save();
+
+                            //Return 
+                            return response()->json($assessment, 201);
+                        } else {
+                            //Return 500
+                            return response()->json(array(), 500);
+                        }
+                    } else {
+                        //Return found assessment
+                        return response()->json($assessment, 200);
+                    }
+
                 } else {
-                    //Return 500, error saving
+                    //Return 500
                     return response()->json(array(), 500);
                 }
             }

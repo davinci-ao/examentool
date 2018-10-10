@@ -36,6 +36,6 @@ $router->get('/assessments', [
     'uses' => 'AssessmentController@getAllFinalAssessments'
 ]);
 
-$router->get('/assessment/{final_assessment_id}/join', [
-   'uses' => 'AssessmentController@hookInOnAssessment'
+$router->post('/assessment/{final_assessment_id}/join', [
+   'uses' => 'AssessmentController@joinAssessment'
 ]);

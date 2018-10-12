@@ -111,23 +111,29 @@ class AssessmentController extends Controller
                         $assessment->exam_cohort = $final_assessment->exam_cohort;
                         $assessment->final_assessment_id = $final_assessment->_id;
                         $assessment->exam_rating_algorithms = $final_assessment->exam_rating_algorithms;
-                        //$assessment->exam_criteria = $final_assessment->exam_criteria;
                         $assessment->finished = False;
                         $assessment->date = $final_assessment->date;
+                        //Make empty variable to store modified criteria sections with criteria in
                         $criterias = array();
 
+                        //Loop through all criteria sections
                         foreach ($final_assessment->exam_criteria as $criteria_section) {
+                            //Create variable to temporary store criteria section criterias
                             $new_criterias = array();
+                            //Loop through all criterias in a criteria section
                            foreach($criteria_section['criteria'] as $criteria) {
+                               //Add extra data fields to criteria
                                 $criteria['doubt'] = False;
                                 $criteria['answer'] = Null;
                                 $criteria['examinator_notes'] = "";
+                                //Push to temproary criteria variable $new_criterias
                                 array_push($new_criterias, $criteria);
                            }
                            $criteria_section['criteria'] = $new_criterias;
+                           //Push criteria section to $criterias variable
                            array_push($criterias, $criteria_section);
                         }
-
+                        //Place modified criterias in Assessment 
                         $assessment->exam_criteria = $criterias;
 
                         //Insert assessment

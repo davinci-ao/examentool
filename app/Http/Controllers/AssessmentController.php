@@ -64,7 +64,8 @@ class AssessmentController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getAllFinalAssessments() {
+    public function getAllFinalAssessments()
+    {
         if($data = FinalAssessment::all()) {
             //return all trimmed Exams, 200
             return response()->json($data, 200);
@@ -82,7 +83,8 @@ class AssessmentController extends Controller
      * @return \Illuminate\Http\JsonResponse
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function joinAssessment($final_assessment_id, Request $request) {
+    public function joinAssessment($final_assessment_id, Request $request)
+    {
 
         //Get and validate request data
         $request_data = $this->validate($request, [
@@ -164,6 +166,11 @@ class AssessmentController extends Controller
             //Return 404 if no FinalAssessment found
             return response()->json(array(), 404);
         }
+    }
+
+    public function updateAssessment()
+    {
+
     }
 
 }

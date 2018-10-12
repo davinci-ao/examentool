@@ -39,3 +39,7 @@ $router->get('/assessments', [
 $router->post('/assessment/{final_assessment_id}/join', [
    'uses' => 'AssessmentController@joinAssessment'
 ]);
+
+$router->post('/assessment/{final_assessment_id}/update', [
+   'uses' => 'AssessmentController@updateAssessment'
+]);

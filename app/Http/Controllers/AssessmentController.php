@@ -111,9 +111,24 @@ class AssessmentController extends Controller
                         $assessment->exam_cohort = $final_assessment->exam_cohort;
                         $assessment->final_assessment_id = $final_assessment->_id;
                         $assessment->exam_rating_algorithms = $final_assessment->exam_rating_algorithms;
-                        $assessment->exam_criteria = $final_assessment->exam_criteria;
+                        //$assessment->exam_criteria = $final_assessment->exam_criteria;
                         $assessment->finished = False;
                         $assessment->date = $final_assessment->date;
+                        $criterias = array();
+
+                        foreach ($final_assessment->exam_criteria as $criteria_section) {
+                            $new_criterias = array();
+                           foreach($criteria_section['criteria'] as $criteria) {
+                                $criteria['doubt'] = False;
+                                $criteria['answer'] = Null;
+                                $criteria['examinator_notes'] = "";
+                                array_push($new_criterias, $criteria);
+                           }
+                           $criteria_section['criteria'] = $new_criterias;
+                           array_push($criterias, $criteria_section);
+                        }
+
+                        $assessment->exam_criteria = $criterias;
 
                         //Insert assessment
                         if($assessment->save()) {
@@ -123,7 +138,7 @@ class AssessmentController extends Controller
                             $final_assessment->examinators = $examinators;
                             $final_assessment->save();
 
-                            //Return 
+                            //Return
                             return response()->json($assessment, 201);
                         } else {
                             //Return 500

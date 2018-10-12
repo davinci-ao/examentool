@@ -168,9 +168,11 @@ class AssessmentController extends Controller
         }
     }
 
-    public function updateAssessment()
-    {
-
+    public function updateAssessment($assessment_id, Request $request){
+        $data = Assessment::findOrFail($assessment_id);
+        $data->update($request->all());
+        
+        return response()->json($data, 200);
     }
 
 }

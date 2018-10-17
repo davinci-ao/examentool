@@ -23,11 +23,11 @@ $router->get('/exams', [
 $router->get('/exams/full', [
     'uses' => 'DeterminedExamController@getAll'
 ]);
-
+//Get selected exam by id
 $router->get('/exam/{exam_id}', [
     'uses' => 'DeterminedExamController@getById'
 ]);
-
+//Start exam by id
 $router->get('/exam/{exam_id}/start', [
     'uses' => 'AssessmentController@startAssessment'
 ]);

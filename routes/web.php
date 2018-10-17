@@ -15,13 +15,19 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-// Routes for DeterminedExamController
-$router->get('/index', [
-    'uses' => 'DeterminedExamController@index'
+//Get all exams with criteria trimmed out
+$router->get('/exams', [
+    'uses' => 'DeterminedExamController@getAllTrimmed'
 ]);
-$router->get('/view/{id}', [
-    'uses' => 'DeterminedExamController@view'
+//Get all exams with all data
+$router->get('/exams/full', [
+    'uses' => 'DeterminedExamController@getAll'
 ]);
-$router->post('/add', [
-    'uses' => 'DeterminedExamController@create'
+//Get selected exam by id
+$router->get('/exam/{exam_id}', [
+    'uses' => 'DeterminedExamController@getById'
+]);
+//Start exam by id
+$router->get('/exam/{exam_id}/start', [
+    'uses' => 'AssessmentController@startAssessment'
 ]);

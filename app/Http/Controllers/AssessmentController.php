@@ -206,12 +206,13 @@ class AssessmentController extends Controller
                     //Make variable to update current criteria
                     $single_criteria = new \stdClass();
 
-                    //Update properties of current criteria
+                    //Update properties of current criteria (NOT EDITABLE ONES)
                     $single_criteria->criteria_name = $criteria[$b]['criteria_name'];
                     $single_criteria->criteria_description = $criteria[$b]['criteria_description'];
                     $single_criteria->rating_group = $criteria[$b]['rating_group'];
                     $single_criteria->show_stopper = $criteria[$b]['show_stopper'];
 
+                    //Update properties of current criteria (EDITABLE)
                     $single_criteria->doubt = $request_data['exam_criteria'][$a]['criteria'][$b]['doubt'];
                     $single_criteria->answer = $request_data['exam_criteria'][$a]['criteria'][$b]['answer'];
                     $single_criteria->examinator_notes = $request_data['exam_criteria'][$a]['criteria'][$b]['examinator_notes'];

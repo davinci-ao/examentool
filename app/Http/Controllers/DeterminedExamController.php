@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DeterminedExam;
+use App\FinalAssessment;
 use Illuminate\Http\Request;
 
 class DeterminedExamController extends Controller
@@ -80,6 +81,13 @@ class DeterminedExamController extends Controller
     public function update($determined_exam_id, Request $request)
     {
         if($determined_exam = DeterminedExam::find($determined_exam_id)) {
+            //Found DeterminedExam
+
+            //If a Examination has already been started using the DeterminedExam, return 405
+            if($final_assessments = FinalAssessment::where('determined_exam_id', '=', $determined_exam_id)->get()->count() > 0)
+                return response()->json(array(), 405);
+
+
 
             //Validate request data
             $request_data = $this->validate($request, [

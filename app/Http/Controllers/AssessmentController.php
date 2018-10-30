@@ -179,7 +179,7 @@ class AssessmentController extends Controller
     public function updateAssessment($assessment_id, Request $request){
         //Validate request data
         $request_data = $this->validate($request, [
-            'student_number' => 'required|max:25',
+            'student_number' => '',
             'exam_criteria' => 'required'
         ]);
 
@@ -231,9 +231,8 @@ class AssessmentController extends Controller
             $assessment->exam_criteria = $new_assessment_criteria;
 
             //If student number is set update
-            if(isset($request_data['student_number'])) {
+            if(isset($request_data['student_number']))
                 $assessment->student_number = $request_data['student_number'];
-            }
 
             //Update
             if($assessment->update()) {

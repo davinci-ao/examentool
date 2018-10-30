@@ -24,9 +24,14 @@ $router->get('/exams/full', [
     'uses' => 'DeterminedExamController@getAll'
 ]);
 //Get selected exam by id
-$router->get('/exam/{exam_id}', [
+$router->get('/exam/{determined_exam_id}', [
     'uses' => 'DeterminedExamController@getById'
 ]);
+//Update exam by id
+$router->put('/exam/{determined_exam_id}', [
+    'uses' => 'DeterminedExamController@update'
+]);
+
 //Start exam by id
 $router->get('/exam/{exam_id}/start', [
     'uses' => 'AssessmentController@startAssessment'

@@ -17,7 +17,7 @@ class DeterminedExamController extends Controller
     }
 
     /**
-     * Get all Exams.
+     * Get all DeterminedExam's (Full)
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -34,7 +34,7 @@ class DeterminedExamController extends Controller
     }
 
     /**
-     * Get all Exams, little data as possible.
+     * Get all DeterminedExam's (Trimmed)
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -51,20 +51,37 @@ class DeterminedExamController extends Controller
     }
 
     /**
-     * Find exam by id.
+     * Find DeterminedExam by ID
      *
-     * @param $exam_id
+     * @param $determined_exam_id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getById($exam_id)
+    public function getById($determined_exam_id)
     {
         //If can find exam by id
-        if($data = DeterminedExam::find($exam_id)) {
+        if($data = DeterminedExam::find($determined_exam_id)) {
             //Return exam, 200
             return response()->json($data, 200);
         } else {
             //Return 404
             return response()->json(new \stdClass(),404);
+        }
+    }
+
+    /**
+     * Update DeterminedExam by ID
+     *
+     * @param $determined_exam_id
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update($determined_exam_id, Request $request)
+    {
+        if($determined_exam = DeterminedExam::find($determined_exam_id)) {
+            return response()->json($determined_exam, 200);
+        } else {
+            //Return 404
+            return response()->json(new \stdClass(), 404);
         }
     }
 }

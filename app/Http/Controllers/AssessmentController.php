@@ -151,6 +151,9 @@ class AssessmentController extends Controller
                             return response()->json(array(), 500);
                         }
                     } else {
+                        //Pull object out of the array MongoDB returns
+                        $assessment = $assessment[0];
+
                         //Return found assessment
                         return response()->json($assessment, 200);
                     }

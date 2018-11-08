@@ -43,3 +43,7 @@ $router->post('/assessment/{final_assessment_id}/join', [
 $router->put('/assessment/{assessment_id}/update', [
    'uses' => 'AssessmentController@updateAssessment'
 ]);
+// Create a exam
+$router->post('/exam/create', [
+    'uses' => 'DeterminedExamController@createExam'
+]);

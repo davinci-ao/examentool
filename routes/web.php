@@ -31,3 +31,11 @@ $router->get('/exam/{exam_id}', [
 $router->get('/exam/{exam_id}/start', [
     'uses' => 'AssessmentController@startAssessment'
 ]);
+
+$router->get('/assessments', [
+    'uses' => 'AssessmentController@getAllFinalAssessments'
+]);
+
+$router->post('/assessment/{final_assessment_id}/join', [
+   'uses' => 'AssessmentController@joinAssessment'
+]);

@@ -101,7 +101,6 @@ class DeterminedExamsTableSeeder extends Seeder
         $exam_section_two_criteria_two->show_stopper = False;
         $exam_section_two->criteria = array($exam_section_two_criteria_one, $exam_section_two_criteria_two);
 
-
         $data = array(
             "exam_title" => "Proeve van Bekwaamheid 2",
             "exam_description" => "KT2 (B1-K2): Realiseert en test een applicatie",

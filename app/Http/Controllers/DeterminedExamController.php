@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DeterminedExam;
+use Illuminate\Http\Request;
 
 class DeterminedExamController extends Controller
 {
@@ -65,6 +66,22 @@ class DeterminedExamController extends Controller
         } else {
             //Return 404
             return response()->json(new \stdClass(),404);
+        }
+    }
+
+    public function createExam(Request $request){
+        //Get and validate request data
+        $data = $this->validate($request, [
+            'exam_title' => 'required',
+            'exam_description' => 'required',
+            'exam_cohort' => 'required']);
+
+        if($determined_exam = DeterminedExam::create($data)) {
+            //save created exam, 200
+            return response()->json($determined_exam, 200);
+        }else {
+            //return 500
+            return response()->json(array(), 500);
         }
     }
 }

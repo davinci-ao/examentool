@@ -23,11 +23,11 @@ $router->get('/exams', [
 $router->get('/exams/full', [
     'uses' => 'DeterminedExamController@getAll'
 ]);
-
+//Get selected exam by id
 $router->get('/exam/{exam_id}', [
     'uses' => 'DeterminedExamController@getById'
 ]);
-
+//Start exam by id
 $router->get('/exam/{exam_id}/start', [
     'uses' => 'AssessmentController@startAssessment'
 ]);
@@ -38,4 +38,8 @@ $router->get('/assessments', [
 
 $router->post('/assessment/{final_assessment_id}/join', [
    'uses' => 'AssessmentController@joinAssessment'
+]);
+
+$router->put('/assessment/{assessment_id}/update', [
+   'uses' => 'AssessmentController@updateAssessment'
 ]);

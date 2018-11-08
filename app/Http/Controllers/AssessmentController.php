@@ -64,7 +64,8 @@ class AssessmentController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getAllFinalAssessments() {
+    public function getAllFinalAssessments()
+    {
         if($data = FinalAssessment::all()) {
             //return all trimmed Exams, 200
             return response()->json($data, 200);
@@ -82,7 +83,8 @@ class AssessmentController extends Controller
      * @return \Illuminate\Http\JsonResponse
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function joinAssessment($final_assessment_id, Request $request) {
+    public function joinAssessment($final_assessment_id, Request $request)
+    {
 
         //Get and validate request data
         $request_data = $this->validate($request, [
@@ -167,6 +169,88 @@ class AssessmentController extends Controller
             //Return 404 if no FinalAssessment found
             return response()->json(array(), 404);
         }
+    }
+
+    /**
+     * Update Assessment by id
+     *
+     * @param $assessment_id
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function updateAssessment($assessment_id, Request $request){
+        //Validate request data
+        $request_data = $this->validate($request, [
+            'student_number' => '',
+            'exam_criteria' => 'required'
+        ]);
+
+        //Find existing assessment
+        if($assessment = Assessment::find($assessment_id)) {
+
+            //Make variables for looping
+            $assessment_criteria = $assessment->exam_criteria;
+            $new_assessment_criteria = array();
+
+            //Loop through criteria sections
+            for($a = 0; $a < count($assessment_criteria); $a++) {
+
+                //Make section variable and set the title
+                $section = new \stdClass();
+                $section->title = $assessment_criteria[$a]['title'];
+
+                //Make criteria variables for looping
+                $criteria = $assessment_criteria[$a]['criteria'];
+                $new_criteria = array();
+
+                //Loop through criteria for this criteria section
+                for($b = 0; $b < count($criteria); $b++) {
+                    //Make variable to update current criteria
+                    $single_criteria = new \stdClass();
+
+                    //Update properties of current criteria (NOT EDITABLE ONES)
+                    $single_criteria->criteria_name = $criteria[$b]['criteria_name'];
+                    $single_criteria->criteria_description = $criteria[$b]['criteria_description'];
+                    $single_criteria->rating_group = $criteria[$b]['rating_group'];
+                    $single_criteria->show_stopper = $criteria[$b]['show_stopper'];
+
+                    //Update properties of current criteria (EDITABLE)
+                    $single_criteria->doubt = $request_data['exam_criteria'][$a]['criteria'][$b]['doubt'];
+                    $single_criteria->answer = $request_data['exam_criteria'][$a]['criteria'][$b]['answer'];
+                    $single_criteria->examinator_notes = $request_data['exam_criteria'][$a]['criteria'][$b]['examinator_notes'];
+
+                    //Push updated criteria into criteria section
+                    array_push($new_criteria, $single_criteria);
+                }
+
+                $section->criteria = $new_criteria;
+
+                //Push criteria section into criteria list
+                array_push($new_assessment_criteria, $section);
+            }
+
+            //Updatea criteria array in Assessment object
+            $assessment->exam_criteria = $new_assessment_criteria;
+
+            //If student number is set update
+            if(isset($request_data['student_number']))
+                $assessment->student_number = $request_data['student_number'];
+
+            //Update
+            if($assessment->update()) {
+                //Return updated assessment
+                return response()->json($assessment, 200);
+            } else {
+                //Return 500
+                return response()->json(array(), 500);
+            }
+        } else {
+            //Return 404
+            return response()->json(array(), 404);
+        }
+
+
     }
 
 }

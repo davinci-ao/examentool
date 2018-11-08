@@ -18,7 +18,7 @@ class Assessment extends Model implements AuthenticatableContract, AuthorizableC
      * @var array
      */
     protected $fillable = [
-        '',
+        'student_number', 'exam_criteria'
     ];
 
     /**

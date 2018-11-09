@@ -98,7 +98,7 @@ class AssessmentController extends Controller
                 return response()->json(array(), 403);
             } else {
                 //Check if user already has an assessment for this Final Assessment
-                if($assessment = Assessment::where('examinator', '=', $request_data['examinator_name'])->get()) {
+                if($assessment = Assessment::where('final_assessment_id', '=', $final_assessment_id)->where('examinator', '=', $request_data['examinator_name'])->get()) {
 
                     //If no entries found
                     if($assessment->count() == 0) {

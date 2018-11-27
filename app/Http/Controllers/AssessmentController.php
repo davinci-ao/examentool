@@ -218,7 +218,7 @@ class AssessmentController extends Controller
                     //Update properties of current criteria (EDITABLE)
                     $single_criteria->doubt = $request_data['exam_criteria'][$a]['criteria'][$b]['doubt'];
                     $single_criteria->answer = $request_data['exam_criteria'][$a]['criteria'][$b]['answer'];
-                    $single_criteria->examinator_notes = $request_data['exam_criteria'][$a]['criteria'][$b]['examinator_notes'];
+                    $single_criteria->examiner_notes = $request_data['exam_criteria'][$a]['criteria'][$b]['examiner_notes'];
 
                     //Push updated criteria into criteria section
                     array_push($new_criteria, $single_criteria);

@@ -21,7 +21,7 @@ class Assessments extends Migration
             $collection->string('exam_rating_algorithms');
             $collection->string('exam_criteria');
             $collection->string('final_assessment_id');
-            $collection->string('examinator');
+            $collection->string('examiner');
             $collection->string('student_number');
             $collection->boolean('finished');
         });

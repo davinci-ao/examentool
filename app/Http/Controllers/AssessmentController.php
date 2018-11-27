@@ -36,7 +36,7 @@ class AssessmentController extends Controller
             $final_assessment->exam_title = $determined_exam->exam_title;
             $final_assessment->exam_description = $determined_exam->exam_description;
             $final_assessment->student_number = "";
-            $final_assessment->examinators = array();
+            $final_assessment->examiners = array();
             $final_assessment->exam_cohort = $determined_exam->exam_cohort;
             $final_assessment->determined_exam_id  = $determined_exam->_id;
             $final_assessment->exam_rating_algorithms  = $determined_exam->exam_rating_algorithms;
@@ -88,7 +88,7 @@ class AssessmentController extends Controller
 
         //Get and validate request data
         $request_data = $this->validate($request, [
-            'examinator_name' => 'required',
+            'examiner_name' => 'required',
         ]);
 
         //Find FinalAssessment
@@ -98,7 +98,7 @@ class AssessmentController extends Controller
                 return response()->json(array(), 403);
             } else {
                 //Check if user already has an assessment for this Final Assessment
-                if($assessment = Assessment::where('final_assessment_id', '=', $final_assessment_id)->where('examinator', '=', $request_data['examinator_name'])->get()) {
+                if($assessment = Assessment::where('final_assessment_id', '=', $final_assessment_id)->where('examiner', '=', $request_data['examiner_name'])->get()) {
 
                     //If no entries found
                     if($assessment->count() == 0) {
@@ -109,7 +109,7 @@ class AssessmentController extends Controller
                         $assessment->exam_title = $final_assessment->exam_title;
                         $assessment->exam_description = $final_assessment->exam_description;
                         $assessment->student_number = $final_assessment->student_number;
-                        $assessment->examinator = $request_data['examinator_name'];//Insert current user id or object when user system integrated!!
+                        $assessment->examiner = $request_data['examiner_name'];//Insert current user id or object when user system integrated!!
                         $assessment->exam_cohort = $final_assessment->exam_cohort;
                         $assessment->final_assessment_id = $final_assessment->_id;
                         $assessment->exam_rating_algorithms = $final_assessment->exam_rating_algorithms;
@@ -127,8 +127,8 @@ class AssessmentController extends Controller
                                //Add extra data fields to criteria
                                 $criteria['doubt'] = False;
                                 $criteria['answer'] = Null;
-                                $criteria['examinator_notes'] = "";
-                                //Push to temproary criteria variable $new_criterias
+                                $criteria['examiner_notes'] = "";
+                                //Push to temporary criteria variable $new_criterias
                                 array_push($new_criterias, $criteria);
                            }
                            $criteria_section['criteria'] = $new_criterias;
@@ -140,10 +140,10 @@ class AssessmentController extends Controller
 
                         //Insert assessment
                         if($assessment->save()) {
-                            //Update examinators araray in Final Assessment
-                            $examinators = $final_assessment->examinators;
-                            array_push($examinators, $request_data['examinator_name']);
-                            $final_assessment->examinators = $examinators;
+                            //Update examiners array in Final Assessment
+                            $examiners = $final_assessment->examiners;
+                            array_push($examiners, $request_data['examiner_name']);
+                            $final_assessment->examiners = $examiners;
                             $final_assessment->save();
 
                             //Return

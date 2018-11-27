@@ -21,8 +21,8 @@ class FinalAssessments extends Migration
             $collection->string('exam_rating_algorithms');
             $collection->string('exam_criteria');
             $collection->string('determined_exam_id');
-            $collection->string('examinators');
-            $collection->string('student_numer');
+            $collection->string('examiners');
+            $collection->string('student_number');
             $collection->string('result');
             $collection->boolean('finished');
         });

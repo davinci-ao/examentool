@@ -182,7 +182,7 @@ class AssessmentController extends Controller
     public function updateAssessment($assessment_id, Request $request){
         //Validate request data
         $request_data = $this->validate($request, [
-            'student_number' => '',
+            'student_number' => 'required|string|max:8', //max:8 if string, digits:8 for int
             'exam_criteria' => 'required'
         ]);
 

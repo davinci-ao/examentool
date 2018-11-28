@@ -90,11 +90,8 @@ class DeterminedExamsTableSeeder extends Seeder
         $exam_section_one->criteria = array($exam_section_one_criteria_one, $exam_section_one_criteria_two);
 
         $exam_section_two = new stdClass();
-<<<<<<< HEAD
         $exam_section_two->title = "section_two";
-=======
         $exam_section_two->title = "User Interface";
->>>>>>> dev
 
         $exam_section_two_criteria_one = new stdClass();
         $exam_section_two_criteria_one->criteria_name = "Geen user interface";
@@ -103,20 +100,16 @@ class DeterminedExamsTableSeeder extends Seeder
         $exam_section_two_criteria_one->show_stopper = True;
 
         $exam_section_two_criteria_two = new stdClass();
-<<<<<<< HEAD
         $exam_section_two_criteria_two->criteria_name = "Good criteria";
         $exam_section_two_criteria_two->criteria_description = "Criteria van de \"good\" group";
         $exam_section_two_criteria_two->rating_group = "fail";
         $exam_section_two_criteria_two->show_stopper = True;
         $exam_section_two->criteria = array($exam_section_two_criteria_one, $exam_section_two_criteria_two);
-=======
         $exam_section_two_criteria_two->criteria_name = "Duidelijke interface";
         $exam_section_two_criteria_two->criteria_description = "De user interface is duidelijk";
         $exam_section_two_criteria_two->rating_group = "pass";
         $exam_section_two_criteria_two->show_stopper = False;
         $exam_section_two->criteria = array($exam_section_two_criteria_one, $exam_section_two_criteria_two);
-
->>>>>>> dev
 
         $data = array(
             "exam_title" => "Proeve van Bekwaamheid 2",

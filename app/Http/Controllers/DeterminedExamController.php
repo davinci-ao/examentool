@@ -70,6 +70,23 @@ class DeterminedExamController extends Controller
         }
     }
 
+    public function createExam(Request $request)
+    {
+        //Get and validate request data
+        $data = $this->validate($request, [
+            'exam_title' => 'required',
+            'exam_description' => 'required',
+            'exam_cohort' => 'required'
+        ]);
+
+        if ($determined_exam = DeterminedExam::create($data)) {
+            //save created exam, 200
+            return response()->json($determined_exam, 200);
+        } else {
+            //return 500
+            return response()->json(array(), 500);
+        }
+    }
     /**
      * Update DeterminedExam by ID
      *

@@ -52,3 +52,7 @@ $router->put('/assessment/{assessment_id}/update', [
 $router->post('/exam/create', [
     'uses' => 'DeterminedExamController@createExam'
 ]);
+// Archive a exam
+$router->get('/exam/{determined_exam_id}/archive', [
+    'uses' => 'DeterminedExamController@archiveExam'
+]);

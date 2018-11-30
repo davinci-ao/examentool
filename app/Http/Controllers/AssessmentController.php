@@ -20,7 +20,7 @@ class AssessmentController extends Controller
     }
 
     /**
-     * Start assement
+     * Start assessment
      *
      * @param $exam_id
      * @return \Illuminate\Http\JsonResponse
@@ -229,7 +229,7 @@ class AssessmentController extends Controller
                 array_push($new_assessment_criteria, $section);
             }
 
-            //Updatea criteria array in Assessment object
+            //Update criteria array in Assessment object
             $assessment->exam_criteria = $new_assessment_criteria;
 
             //If student number is set update

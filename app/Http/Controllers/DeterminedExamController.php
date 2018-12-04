@@ -27,7 +27,7 @@ class DeterminedExamController extends Controller
     public function getAll()
     {
         //If can get all Exams
-        if ($exams = DeterminedExam::get()) {
+        if ($exams = DeterminedExam::where('active', '=', true)->get()) {
             //Return Exams, 200
             return response()->json($exams, 200);
         } else {
@@ -44,7 +44,7 @@ class DeterminedExamController extends Controller
     public function getAllTrimmed()
     {
         //If can get all Exams
-        if ($data = DeterminedExam::select('_id', 'exam_title', 'exam_description', 'exam_cohort')->get()) {
+        if ($data = DeterminedExam::select('_id', 'exam_title', 'exam_description', 'exam_cohort')->where('active', '=', true)->get()) {
             //return all trimmed Exams, 200
             return response()->json($data, 200);
         } else {
@@ -62,7 +62,7 @@ class DeterminedExamController extends Controller
     public function getById($determined_exam_id)
     {
         //If can find exam by id
-        if ($data = DeterminedExam::find($determined_exam_id)) {
+        if ($data = DeterminedExam::where("_id", '=', $determined_exam_id)->where('active', '=', true)->get()) {
             //Return exam, 200
             return response()->json($data, 200);
         } else {
@@ -77,9 +77,9 @@ class DeterminedExamController extends Controller
         $data = $this->validate($request, [
             'exam_title' => 'required',
             'exam_description' => 'required',
-            'exam_cohort' => 'required'
+            'exam_cohort' => 'required',
         ]);
-
+        $data['active'] = true;
         if ($determined_exam = DeterminedExam::create($data)) {
             //save created exam, 200
             return response()->json($determined_exam, 200);

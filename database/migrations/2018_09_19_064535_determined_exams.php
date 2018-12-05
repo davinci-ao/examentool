@@ -20,6 +20,7 @@ class DeterminedExams extends Migration
             $collection->number('exam_cohort');
             $collection->string('exam_rating_algorithms');
             $collection->string('exam_criteria');
+            $collection->boolean('active');
         });
     }
 

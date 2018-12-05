@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\DeterminedExam;
 use App\FinalAssessment;
-use http\Env\Response;
 use Illuminate\Http\Request;
 
 class DeterminedExamController extends Controller
@@ -149,7 +148,7 @@ class DeterminedExamController extends Controller
                 return response()->json($determined_exam, 200);
             } else {
                 //Fail, return 505
-                return response()->json($determined_exam, 505);
+                return response()->json($determined_exam, 500);
             }
         } else {
             //Return 404
@@ -157,21 +156,35 @@ class DeterminedExamController extends Controller
         }
     }
 
+
+    /**
+     *  Archive DeterminedExam by ID
+     *
+     * @param $determined_exam_id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function archiveExam($determined_exam_id)
-    {
-        if ($determined_exam = DeterminedExam::find($determined_exam_id)) {
-            if ($final_assessments = FinalAssessment::where('determined_exam_id', '=',
-                    $determined_exam_id)->where('finished', '=', 'false')->get()->count() > 0) {
+    {   //Find exam by id
+        $determined_exam = DeterminedExam::find($determined_exam_id);
+        if ($determined_exam) {
+            //Checks if exam already started
+            $final_assessments = FinalAssessment::where('determined_exam_id', '=', $determined_exam_id)->where('finished', '=', false)->get()->count();
+            if ($final_assessments > 0) {
+                //Fail, return 405
                 return response()->json(array(), 405);
             } else {
                 $determined_exam->active = false;
+                if ($determined_exam->save()) {
+                    // Archive success, 200
+                    return response()->json($determined_exam, 200);
+                } else {
+                    //Fail, return 505
+                    return response()->json($determined_exam, 500);
+                }
             }
-        }
-        if ($determined_exam->save()) {
-            return response()->json($determined_exam, 200);
-        } else {
-            //Fail, return 505
-            return response()->json($determined_exam, 505);
+        }else {
+            //Not found, 404
+            return response()->json(array(), 404);
         }
     }
 }

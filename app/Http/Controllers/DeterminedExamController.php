@@ -176,9 +176,9 @@ class DeterminedExamController extends Controller
                 $determined_exam->active = false;
                 if ($determined_exam->save()) {
                     // Archive success, 200
-                    return response()->json($determined_exam, 200);
+                    return response()->json(new \stdClass(), 200);
                 } else {
-                    //Fail, return 505
+                    //Fail, return 500
                     return response()->json($determined_exam, 500);
                 }
             }

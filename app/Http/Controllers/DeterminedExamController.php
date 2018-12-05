@@ -61,7 +61,7 @@ class DeterminedExamController extends Controller
     public function getById($determined_exam_id)
     {
         //If can find exam by id
-        if ($data = DeterminedExam::where("_id", '=', $determined_exam_id)->where('active', '=', true)->get()) {
+        if ($data = DeterminedExam::where("_id", '=', $determined_exam_id)->where('active', '=', true)->get()->first()) {
             //Return exam, 200
             return response()->json($data, 200);
         } else {

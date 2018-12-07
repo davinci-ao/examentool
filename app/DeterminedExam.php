@@ -18,7 +18,7 @@ class DeterminedExam extends Model implements AuthenticatableContract, Authoriza
      * @var array
      */
     protected $fillable = [
-        'exam_title', 'exam_description', 'exam_cohort', 'exam_rating_algorithms', 'exam_criteria', 'active'
+        'exam_title', 'exam_description', 'exam_cohort', 'exam_rating_algorithms', 'exam_criteria', 'active', 'editable'
     ];
 
     /**

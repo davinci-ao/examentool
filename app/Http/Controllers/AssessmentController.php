@@ -278,6 +278,8 @@ class AssessmentController extends Controller
         $final_assessment = FinalAssessment::find($final_assessment_id);
         $final_assessment->minutes = $request_data['minutes'];
 
+        $this->endAssessment($final_assessment_id);
+
         //Update
         if($final_assessment->update()) {
             //Return updated assessment
@@ -297,6 +299,15 @@ class AssessmentController extends Controller
     private function endAssessment($final_assessment_id) {
         $final_assessment = FinalAssessment::find($final_assessment_id);
         $final_assessment->finished = true;
+
+        $assessments = Assessment::where('final_assessment_id', '=', $final_assessment_id)->get();
+        foreach ($assessments as $assessment) {
+            $assessment->finished = true;
+            if(!$assessment->update()) {
+                return false;
+            }
+        }
+
         if($final_assessment->update()) {
             return true;
         } else {

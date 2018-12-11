@@ -79,6 +79,7 @@ class DeterminedExamController extends Controller
             'exam_cohort' => 'required',
         ]);
         $data['active'] = true;
+        $data['editable'] = true;
         if ($determined_exam = DeterminedExam::create($data)) {
             //save created exam, 200
             return response()->json($determined_exam, 200);

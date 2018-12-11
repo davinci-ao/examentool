@@ -6,6 +6,7 @@ use App\Assessment;
 use App\FinalAssessment;
 use App\DeterminedExam;
 use Illuminate\Http\Request;
+use phpDocumentor\Reflection\Types\Boolean;
 
 class AssessmentController extends Controller
 {
@@ -284,6 +285,22 @@ class AssessmentController extends Controller
         } else {
             //Return 500
             return response()->json(array(), 500);
+        }
+    }
+
+    /**
+     * End assessment
+     *
+     * @param $final_assessment_id
+     * @return Bool
+     */
+    private function endAssessment($final_assessment_id) {
+        $final_assessment = FinalAssessment::find($final_assessment_id);
+        $final_assessment->finished = true;
+        if($final_assessment->update()) {
+            return true;
+        } else {
+            return false;
         }
     }
 }

@@ -78,6 +78,7 @@ class DeterminedExamController extends Controller
             'exam_description' => 'required',
             'exam_cohort' => 'required',
         ]);
+        $data['exam_criteria'] = $request['exam_criteria'];
         $data['active'] = true;
         $data['editable'] = true;
         if ($determined_exam = DeterminedExam::create($data)) {

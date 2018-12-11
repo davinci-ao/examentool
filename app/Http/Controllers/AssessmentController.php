@@ -248,8 +248,42 @@ class AssessmentController extends Controller
             //Return 404
             return response()->json(array(), 404);
         }
-
-
     }
 
+    /**
+     * Get minutes
+     *
+     * @param $final_assessment_id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getMinutes($final_assessment_id) {
+        return response()->json(FinalAssessment::find($final_assessment_id)->minutes, 200);
+    }
+
+    /**
+     * Set minutes
+     *
+     * @param $final_assessment_id
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function setMinutes($final_assessment_id, Request $request) {
+        //Validate request data
+        $request_data = $this->validate($request, [
+            'minutes' => 'required'
+        ]);
+
+        $final_assessment = FinalAssessment::find($final_assessment_id);
+        $final_assessment->minutes = $request_data['minutes'];
+
+        //Update
+        if($final_assessment->update()) {
+            //Return updated assessment
+            return $this->getMinutes($final_assessment_id);
+        } else {
+            //Return 500
+            return response()->json(array(), 500);
+        }
+    }
 }

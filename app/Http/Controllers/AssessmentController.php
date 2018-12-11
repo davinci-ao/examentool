@@ -33,6 +33,8 @@ class AssessmentController extends Controller
             //Make final assessment
             $final_assessment = new FinalAssessment();
 
+            $determined_exam->editable = false;
+
             $final_assessment->exam_title = $determined_exam->exam_title;
             $final_assessment->exam_description = $determined_exam->exam_description;
             $final_assessment->student_number = "";
@@ -42,11 +44,11 @@ class AssessmentController extends Controller
             $final_assessment->exam_rating_algorithms  = $determined_exam->exam_rating_algorithms;
             $final_assessment->exam_criteria  = $determined_exam->exam_criteria;
             $final_assessment->result = "";
-            $final_assessment->finished = False;
+            $final_assessment->finished = false;
             $final_assessment->date = date("Y-m-d: H-i-s");
 
             //Insert Final assessment
-            if($final_assessment->save()) {
+            if($final_assessment->save() && $determined_exam->save()) {
                 return response()->json($final_assessment, 201);
             } else {
                 //Return 500, error saving

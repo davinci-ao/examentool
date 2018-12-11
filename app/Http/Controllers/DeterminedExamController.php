@@ -155,7 +155,7 @@ class DeterminedExamController extends Controller
             //Return 404
             return response()->json(new \stdClass(), 404);
         }
-    }
+}
 
 
     /**

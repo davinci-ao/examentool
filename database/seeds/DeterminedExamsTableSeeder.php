@@ -54,6 +54,7 @@ class DeterminedExamsTableSeeder extends Seeder
             "exam_title" => "Proeve van Bekwaamheid 1",
             "exam_description" => "KT2 (B1-K2): Realiseert en test een applicatie",
             "active" => true,
+            "editable" => true,
             "exam_cohort" => 2016,
             "exam_rating_algorithms" => $algorithms,
             "exam_criteria" => Array(
@@ -117,6 +118,7 @@ class DeterminedExamsTableSeeder extends Seeder
             "exam_title" => "Proeve van Bekwaamheid 2",
             "exam_description" => "KT2 (B1-K2): Realiseert en test een applicatie",
             "active" => true,
+            "editable" => true,
             "exam_cohort" => 2017,
             "exam_rating_algorithms" => $algorithms,
             "exam_criteria" => Array(

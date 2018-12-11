@@ -278,10 +278,8 @@ class AssessmentController extends Controller
         $final_assessment = FinalAssessment::find($final_assessment_id);
         $final_assessment->minutes = $request_data['minutes'];
 
-        $this->endAssessment($final_assessment_id);
-
         //Update
-        if($final_assessment->update()) {
+        if($this->endAssessment($final_assessment_id) and $final_assessment->update()) {
             //Return updated assessment
             return $this->getMinutes($final_assessment_id);
         } else {

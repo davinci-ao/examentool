@@ -257,7 +257,7 @@ class AssessmentController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function getMinutes($final_assessment_id) {
-        return response()->json(FinalAssessment::find($final_assessment_id)->minutes, 200);
+        return response()->json(array('minutes' => FinalAssessment::find($final_assessment_id)->minutes), 200);
     }
 
     /**

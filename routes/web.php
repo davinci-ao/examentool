@@ -56,3 +56,7 @@ $router->post('/exam/create', [
 $router->get('/exam/{determined_exam_id}/archive', [
     'uses' => 'DeterminedExamController@archiveExam'
 ]);
+// Establish a exam
+$router->get('/exam/{determined_exam_id}/establish', [
+    'uses' => 'DeterminedExamController@establishExam'
+]);

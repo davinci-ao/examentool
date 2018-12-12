@@ -184,4 +184,29 @@ class DeterminedExamController extends Controller
             return response()->json(array(), 404);
         }
     }
+
+    public function establishExam($determined_exam_id)
+    {   //Find exam by id
+        $determined_exam = DeterminedExam::find($determined_exam_id);
+        if ($determined_exam) {
+            //Checks if exam already started and has the status of editable
+            $final_assessments = FinalAssessment::where('determined_exam_id', '=', $determined_exam_id)->where('status', '=', 'editable')->where('finished', '=', false)->get()->count();
+        if ($final_assessments > 0) {
+            //Fail, return 405
+            return response()->json(array(), 405);
+        }else {
+            $determined_exam->status = 'determined';
+            if ($determined_exam->save()) {
+                // Establish success, 200
+                return response()->json(new \stdClass(), 200);
+            } else {
+                //Fail, return 500
+                return response()->json($determined_exam, 500);
+            }
+        }
+        } else {
+            //Not found, 404
+            return response()->json(array(), 404);
+        }
+    }
 }

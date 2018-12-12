@@ -26,7 +26,7 @@ class DeterminedExamController extends Controller
     public function getAll()
     {
         //If can get all Exams
-        if ($exams = DeterminedExam::where('active', '=', true)->get()) {
+        if ($exams = DeterminedExam::where('status', '=', 'editable')->orwhere('status', '=', 'determined')->get()) {
             //Return Exams, 200
             return response()->json($exams, 200);
         } else {
@@ -43,7 +43,7 @@ class DeterminedExamController extends Controller
     public function getAllTrimmed()
     {
         //If can get all Exams
-        if ($data = DeterminedExam::select('_id', 'exam_title', 'exam_description', 'exam_cohort')->where('active', '=', true)->get()) {
+        if ($data = DeterminedExam::select('_id', 'exam_title', 'exam_description', 'exam_cohort')->where('status', '!=', 'archived')->get()) {
             //return all trimmed Exams, 200
             return response()->json($data, 200);
         } else {
@@ -61,7 +61,7 @@ class DeterminedExamController extends Controller
     public function getById($determined_exam_id)
     {
         //If can find exam by id
-        if ($data = DeterminedExam::where("_id", '=', $determined_exam_id)->where('active', '=', true)->get()->first()) {
+        if ($data = DeterminedExam::where("_id", '=', $determined_exam_id)->where('status', '!=', 'archived')->get()->first()) {
             //Return exam, 200
             return response()->json($data, 200);
         } else {
@@ -78,8 +78,7 @@ class DeterminedExamController extends Controller
             'exam_description' => 'required',
             'exam_cohort' => 'required',
         ]);
-        $data['active'] = true;
-        $data['editable'] = true;
+        $data['status'] = 'editable';
         if ($determined_exam = DeterminedExam::create($data)) {
             //save created exam, 200
             return response()->json($determined_exam, 200);
@@ -103,8 +102,7 @@ class DeterminedExamController extends Controller
             //Found DeterminedExam
 
             //If a Examination has already been started using the DeterminedExam, return 405
-            if ($final_assessments = FinalAssessment::where('determined_exam_id', '=',
-                    $determined_exam_id)->get()->count() > 0) {
+            if ($final_assessments = FinalAssessment::where('determined_exam_id', '=', $determined_exam_id)->where('status', '=', 'editable')->get()->count() > 0) {
                 return response()->json(array(), 405);
             }
 
@@ -156,8 +154,6 @@ class DeterminedExamController extends Controller
             return response()->json(new \stdClass(), 404);
         }
 }
-
-
     /**
      *  Archive DeterminedExam by ID
      *
@@ -174,7 +170,7 @@ class DeterminedExamController extends Controller
                 //Fail, return 405
                 return response()->json(array(), 405);
             } else {
-                $determined_exam->active = false;
+                $determined_exam->status = 'archived';
                 if ($determined_exam->save()) {
                     // Archive success, 200
                     return response()->json(new \stdClass(), 200);

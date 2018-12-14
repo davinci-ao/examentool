@@ -104,55 +104,61 @@ class AssessmentController extends Controller
 
                     //If no entries found
                     if($assessment->count() == 0) {
-                        //Make empty assessment
-                        $assessment = new Assessment();
-
-                        //Set data in assessment
-                        $assessment->exam_title = $final_assessment->exam_title;
-                        $assessment->exam_description = $final_assessment->exam_description;
-                        $assessment->student_number = $final_assessment->student_number;
-                        $assessment->examiner = $request_data['examiner_name'];//Insert current user id or object when user system integrated!!
-                        $assessment->exam_cohort = $final_assessment->exam_cohort;
-                        $assessment->final_assessment_id = $final_assessment->_id;
-                        $assessment->exam_rating_algorithms = $final_assessment->exam_rating_algorithms;
-                        $assessment->finished = False;
-                        $assessment->date = $final_assessment->date;
-                        //Make empty variable to store modified criteria sections with criteria in
-                        $criterias = array();
-
-                        //Loop through all criteria sections
-                        foreach ($final_assessment->exam_criteria as $criteria_section) {
-                            //Create variable to temporary store criteria section criterias
-                            $new_criterias = array();
-                            //Loop through all criterias in a criteria section
-                           foreach($criteria_section['criteria'] as $criteria) {
-                               //Add extra data fields to criteria
-                                $criteria['doubt'] = False;
-                                $criteria['answer'] = Null;
-                                $criteria['examiner_notes'] = "";
-                                //Push to temporary criteria variable $new_criterias
-                                array_push($new_criterias, $criteria);
-                           }
-                           $criteria_section['criteria'] = $new_criterias;
-                           //Push criteria section to $criterias variable
-                           array_push($criterias, $criteria_section);
-                        }
-                        //Place modified criterias in Assessment 
-                        $assessment->exam_criteria = $criterias;
-
-                        //Insert assessment
-                        if($assessment->save()) {
-                            //Update examiners array in Final Assessment
-                            $examiners = $final_assessment->examiners;
-                            array_push($examiners, $request_data['examiner_name']);
-                            $final_assessment->examiners = $examiners;
-                            $final_assessment->save();
-
-                            //Return
-                            return response()->json($assessment, 201);
+                        //Check how many assessments already exits
+                        if(Assessment::where('final_assessment_id', '=', $final_assessment_id)->get()->count() == 2) {
+                            return response()->json(array(), 403);
                         } else {
-                            //Return 500
-                            return response()->json(array(), 500);
+                            //Make empty assessment
+                            $assessment = new Assessment();
+
+                            //Set data in assessment
+                            $assessment->exam_title = $final_assessment->exam_title;
+                            $assessment->exam_description = $final_assessment->exam_description;
+                            $assessment->student_number = $final_assessment->student_number;
+                            $assessment->examiner = $request_data['examiner_name'];//Insert current user id or object when user system integrated!!
+                            $assessment->exam_cohort = $final_assessment->exam_cohort;
+                            $assessment->final_assessment_id = $final_assessment->_id;
+                            $assessment->exam_rating_algorithms = $final_assessment->exam_rating_algorithms;
+                            $assessment->finished = False;
+                            $assessment->date = $final_assessment->date;
+                            //Make empty variable to store modified criteria sections with criteria in
+                            $criterias = array();
+
+                            //Loop through all criteria sections
+                            foreach ($final_assessment->exam_criteria as $criteria_section) {
+                                //Create variable to temporary store criteria section criterias
+                                $new_criterias = array();
+                                //Loop through all criterias in a criteria section
+                                foreach($criteria_section['criteria'] as $criteria) {
+                                    //Add extra data fields to criteria
+                                    $criteria['doubt'] = False;
+                                    $criteria['answer'] = Null;
+                                    $criteria['examiner_notes'] = "";
+                                    //Push to temporary criteria variable $new_criterias
+                                    array_push($new_criterias, $criteria);
+                                }
+                                $criteria_section['criteria'] = $new_criterias;
+                                //Push criteria section to $criterias variable
+                                array_push($criterias, $criteria_section);
+                            }
+                            //Place modified criterias in Assessment
+                            $assessment->exam_criteria = $criterias;
+
+                            //Insert assessment
+                            if($assessment->save()) {
+                                //Update examiners array in Final Assessment
+                                $examiners = $final_assessment->examiners;
+                                array_push($examiners, $request_data['examiner_name']);
+                                $final_assessment->examiners = $examiners;
+                                $final_assessment->save();
+
+                                //Return
+                                return response()->json($assessment, 201);
+                            } else {
+                                //Return 500
+                                return response()->json(array(), 500);
+                            }
+
                         }
                     } else {
                         //Pull object out of the array MongoDB returns

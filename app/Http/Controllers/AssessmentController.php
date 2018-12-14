@@ -260,4 +260,87 @@ class AssessmentController extends Controller
 
     }
 
+    public function test(Request $request) {
+        $data = $this->validate($request, [
+            'id_1' => 'required',
+            'id_2' => 'required'
+        ]);
+
+        $assessment_1 = Assessment::find($data['id_1']);
+        $assessment_2 = Assessment::find($data['id_2']);
+
+        if(!$assessment_1 || !$assessment_2) {
+            return "404";
+        }
+
+
+        return Self::combineAssessments($assessment_1, $assessment_2);
+    }
+
+    private function combineAssessments(Assessment $assessment_1, Assessment $assessment_2) {
+        //Check if both assessments are from the same final assessment!
+        if($assessment_1->final_assessment_id === $assessment_2->final_assessment_id) {
+            $final_assessment = FinalAssessment::find($assessment_1->final_assessment_id);
+
+            $criteria = Array();
+
+            for($section = 0; $section < count($final_assessment->exam_criteria); $section++) {
+                $assessment_section = new \stdClass();
+                $assessment_section->title = $final_assessment->exam_criteria[$section]['title'];
+
+                $assessment_section->criteria = Array();
+
+                for($b = 0; $b < count($final_assessment->exam_criteria[$section]['criteria']); $b++) {
+                    $assessment_1_criterion = $assessment_1->exam_criteria[$section]['criteria'][$b];
+                    $assessment_2_criterion = $assessment_2->exam_criteria[$section]['criteria'][$b];
+
+                    $criterion = new \stdClass();
+                    $criterion->criteria_name = $final_assessment->exam_criteria[$section]['criteria'][$b]['criteria_name'];
+                    $criterion->criteria_description = $final_assessment->exam_criteria[$section]['criteria'][$b]['criteria_description'];
+                    $criterion->rating_group = $final_assessment->exam_criteria[$section]['criteria'][$b]['rating_group'];
+                    $criterion->show_stopper = $final_assessment->exam_criteria[$section]['criteria'][$b]['show_stopper'];
+
+                    if($assessment_1_criterion['answer'] == $assessment_2_criterion['answer']) {
+                        $criterion->doubt = false;
+                        $criterion->answer = $assessment_1->exam_criteria[$section]['criteria'][$b]['answer'];
+
+                    } else {
+                        $criterion->doubt = true;
+                        $criterion->answer = null;
+                    }
+                    $criterion->examiners = Array();
+
+                    foreach($final_assessment->examiners as $examiner) {
+                        $examiner_results = new \stdClass();
+                        $examiner_results->name = $examiner;
+
+                        if($assessment_1->examiner == $examiner) {
+                            $examiner_results->answer = $assessment_1_criterion['answer'];
+                            $examiner_results->notes = $assessment_1_criterion['examiner_notes'];
+                        } else if($assessment_2->examiner == $examiner) {
+                            $examiner_results->answer = $assessment_2_criterion['answer'];
+                            $examiner_results->notes = $assessment_2_criterion['examiner_notes'];
+                        }
+
+
+                        array_push($criterion->examiners, $examiner_results);
+                    }
+
+                    array_push($assessment_section->criteria, $criterion);
+                }
+                array_push($criteria, $assessment_section);
+            }
+
+            $final_assessment->exam_criteria = $criteria;
+
+            if($final_assessment->save()) {
+                return $final_assessment;
+            } else {
+                return false;
+            }
+        } else {
+            //Assessments are from different Final Assessments
+            return false;
+        }
+    }
 }

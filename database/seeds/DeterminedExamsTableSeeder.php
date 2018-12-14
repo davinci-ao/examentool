@@ -116,7 +116,7 @@ class DeterminedExamsTableSeeder extends Seeder
         $data = array(
             "exam_title" => "Proeve van Bekwaamheid 2",
             "exam_description" => "KT2 (B1-K2): Realiseert en test een applicatie",
-            "status" => 'determined',
+            "status" => 'editable',
             "exam_cohort" => 2017,
             "exam_rating_algorithms" => $algorithms,
             "exam_criteria" => Array(

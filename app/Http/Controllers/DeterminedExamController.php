@@ -191,7 +191,12 @@ class DeterminedExamController extends Controller
         }
     }
 
-
+    /**
+     * Establish DeterminedExam by ID
+     *
+     * @param $determined_exam_id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function establishExam($determined_exam_id){
         //Find exam by id
         $determined_exam = DeterminedExam::find($determined_exam_id);

@@ -56,3 +56,8 @@ $router->post('/exam/create', [
 $router->get('/exam/{determined_exam_id}/archive', [
     'uses' => 'DeterminedExamController@archiveExam'
 ]);
+
+//Check if all Assessments for FinalAssessmetn are finished
+$router->get('/assessment/{assessment_id}/check', [
+    'uses' => 'AssessmentController@check'
+]);

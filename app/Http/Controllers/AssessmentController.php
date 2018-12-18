@@ -277,6 +277,42 @@ class AssessmentController extends Controller
         return Self::combineAssessments($assessment_1, $assessment_2);
     }
 
+    /**
+     * Check if all Assessments for FinalAssessment are finished
+     *
+     * @param $assessment_id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function check($assessment_id) {
+        $assessment = Assessment::find($assessment_id);
+        if($assessment) {
+            $assessments = Assessment::where('final_assessment_id', '=', $assessment->final_assessment_id)->get();
+            if($assessments->count() < 2) {
+                return response()->json(array("message"=> "missing"), 405);
+            } else {
+                $finished = true;
+                foreach ($assessments as $assessment) {
+                    if($assessment->finished == false) {
+                        $finished = false;
+                    }
+                }
+                if($finished == false) {
+                    return response()->json(array("message" => "unfinished"), 405);
+                } else {
+                    //Both are finished
+                    return response()->json(array("message" => "finished"), 200);
+                }
+            }
+        } else {
+            return response()->json(array(), 404);
+        }
+    }
+
+    /**
+     * @param Assessment $assessment_1
+     * @param Assessment $assessment_2
+     * @return bool
+     */
     private function combineAssessments(Assessment $assessment_1, Assessment $assessment_2) {
         //Check if both assessments are from the same final assessment!
         if($assessment_1->final_assessment_id === $assessment_2->final_assessment_id) {

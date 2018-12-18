@@ -56,3 +56,11 @@ $router->post('/exam/create', [
 $router->get('/exam/{determined_exam_id}/archive', [
     'uses' => 'DeterminedExamController@archiveExam'
 ]);
+
+$router->get('/assessment/{final_assessment_id}/minutes', [
+    'uses' => 'AssessmentController@getMinutes'
+]);
+
+$router->put('/assessment/{final_assessment_id}/minutes', [
+    'uses' => 'AssessmentController@setMinutes'
+]);

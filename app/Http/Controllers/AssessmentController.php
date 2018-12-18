@@ -6,6 +6,7 @@ use App\Assessment;
 use App\FinalAssessment;
 use App\DeterminedExam;
 use Illuminate\Http\Request;
+use phpDocumentor\Reflection\Types\Boolean;
 
 class AssessmentController extends Controller
 {
@@ -250,8 +251,67 @@ class AssessmentController extends Controller
             //Return 404
             return response()->json(array(), 404);
         }
-
-
     }
 
+    /**
+     * Get minutes
+     *
+     * @param $final_assessment_id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getMinutes($final_assessment_id) {
+        return response()->json(array('minutes' => FinalAssessment::find($final_assessment_id)->minutes), 200);
+    }
+
+    /**
+     * Set minutes
+     *
+     * @param $final_assessment_id
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function setMinutes($final_assessment_id, Request $request) {
+        //Validate request data
+        $request_data = $this->validate($request, [
+            'minutes' => 'required'
+        ]);
+
+        $final_assessment = FinalAssessment::find($final_assessment_id);
+        $final_assessment->minutes = $request_data['minutes'];
+
+        //Update
+        if($this->endAssessment($final_assessment_id) and $final_assessment->update()) {
+            //Return updated assessment
+            return $this->getMinutes($final_assessment_id);
+        } else {
+            //Return 500
+            return response()->json(array(), 500);
+        }
+    }
+
+    /**
+     * End assessment
+     *
+     * @param $final_assessment_id
+     * @return Bool
+     */
+    private function endAssessment($final_assessment_id) {
+        $final_assessment = FinalAssessment::find($final_assessment_id);
+        $final_assessment->finished = true;
+
+        $assessments = Assessment::where('final_assessment_id', '=', $final_assessment_id)->get();
+        foreach ($assessments as $assessment) {
+            $assessment->finished = true;
+            if(!$assessment->update()) {
+                return false;
+            }
+        }
+
+        if($final_assessment->update()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

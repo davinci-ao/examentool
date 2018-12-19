@@ -194,63 +194,72 @@ class AssessmentController extends Controller
         ]);
 
         //Find existing assessment
-        if($assessment = Assessment::find($assessment_id)) {
+        $assessment = Assessment::find($assessment_id);
 
-            //Make variables for looping
-            $assessment_criteria = $assessment->exam_criteria;
-            $new_assessment_criteria = array();
+        if($assessment) {
 
-            //Loop through criteria sections
-            for($a = 0; $a < count($assessment_criteria); $a++) {
+            $finalAssessment = FinalAssessment::find($assessment->final_assessment_id);
 
-                //Make section variable and set the title
-                $section = new \stdClass();
-                $section->title = $assessment_criteria[$a]['title'];
+            if(($finalAssessment->finished && $assessment->finished) == false) {
 
-                //Make criteria variables for looping
-                $criteria = $assessment_criteria[$a]['criteria'];
-                $new_criteria = array();
+                //Make variables for looping
+                $assessment_criteria = $assessment->exam_criteria;
+                $new_assessment_criteria = array();
 
-                //Loop through criteria for this criteria section
-                for($b = 0; $b < count($criteria); $b++) {
-                    //Make variable to update current criteria
-                    $single_criteria = new \stdClass();
+                //Loop through criteria sections
+                for($a = 0; $a < count($assessment_criteria); $a++) {
 
-                    //Update properties of current criteria (NOT EDITABLE ONES)
-                    $single_criteria->criteria_name = $criteria[$b]['criteria_name'];
-                    $single_criteria->criteria_description = $criteria[$b]['criteria_description'];
-                    $single_criteria->rating_group = $criteria[$b]['rating_group'];
-                    $single_criteria->show_stopper = $criteria[$b]['show_stopper'];
+                    //Make section variable and set the title
+                    $section = new \stdClass();
+                    $section->title = $assessment_criteria[$a]['title'];
 
-                    //Update properties of current criteria (EDITABLE)
-                    $single_criteria->doubt = $request_data['exam_criteria'][$a]['criteria'][$b]['doubt'];
-                    $single_criteria->answer = $request_data['exam_criteria'][$a]['criteria'][$b]['answer'];
-                    $single_criteria->examiner_notes = $request_data['exam_criteria'][$a]['criteria'][$b]['examiner_notes'];
+                    //Make criteria variables for looping
+                    $criteria = $assessment_criteria[$a]['criteria'];
+                    $new_criteria = array();
 
-                    //Push updated criteria into criteria section
-                    array_push($new_criteria, $single_criteria);
+                    //Loop through criteria for this criteria section
+                    for($b = 0; $b < count($criteria); $b++) {
+                        //Make variable to update current criteria
+                        $single_criteria = new \stdClass();
+
+                        //Update properties of current criteria (NOT EDITABLE ONES)
+                        $single_criteria->criteria_name = $criteria[$b]['criteria_name'];
+                        $single_criteria->criteria_description = $criteria[$b]['criteria_description'];
+                        $single_criteria->rating_group = $criteria[$b]['rating_group'];
+                        $single_criteria->show_stopper = $criteria[$b]['show_stopper'];
+
+                        //Update properties of current criteria (EDITABLE)
+                        $single_criteria->doubt = $request_data['exam_criteria'][$a]['criteria'][$b]['doubt'];
+                        $single_criteria->answer = $request_data['exam_criteria'][$a]['criteria'][$b]['answer'];
+                        $single_criteria->examiner_notes = $request_data['exam_criteria'][$a]['criteria'][$b]['examiner_notes'];
+
+                        //Push updated criteria into criteria section
+                        array_push($new_criteria, $single_criteria);
+                    }
+
+                    $section->criteria = $new_criteria;
+
+                    //Push criteria section into criteria list
+                    array_push($new_assessment_criteria, $section);
                 }
 
-                $section->criteria = $new_criteria;
+                //Update criteria array in Assessment object
+                $assessment->exam_criteria = $new_assessment_criteria;
 
-                //Push criteria section into criteria list
-                array_push($new_assessment_criteria, $section);
-            }
+                //If student number is set update
+                if(isset($request_data['student_number']))
+                    $assessment->student_number = $request_data['student_number'];
 
-            //Update criteria array in Assessment object
-            $assessment->exam_criteria = $new_assessment_criteria;
-
-            //If student number is set update
-            if(isset($request_data['student_number']))
-                $assessment->student_number = $request_data['student_number'];
-
-            //Update
-            if($assessment->update()) {
-                //Return updated assessment
-                return response()->json($assessment, 200);
+                //Update
+                if($assessment->update()) {
+                    //Return updated assessment
+                    return response()->json($assessment, 200);
+                } else {
+                    //Return 500
+                    return response()->json(array(), 500);
+                }
             } else {
-                //Return 500
-                return response()->json(array(), 500);
+                return response()->json(array(), 405);
             }
         } else {
             //Return 404
@@ -259,22 +268,25 @@ class AssessmentController extends Controller
 
 
     }
-
-    public function test(Request $request) {
-        $data = $this->validate($request, [
-            'id_1' => 'required',
-            'id_2' => 'required'
-        ]);
-
-        $assessment_1 = Assessment::find($data['id_1']);
-        $assessment_2 = Assessment::find($data['id_2']);
-
-        if(!$assessment_1 || !$assessment_2) {
-            return "404";
+    
+    /**
+     * Finish Assessment
+     *
+     * @param $assessment_id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function finishAssessment($assessment_id) {
+        $assessment = Assessment::find($assessment_id);
+        if($assessment) {
+            $assessment->finished = true;
+            if($assessment->save()) {
+                return response()->json($assessment, 200);
+            } else {
+                return response()->json(array(), 500);
+            }
+        } else {
+            return response()->json(array(), 404);
         }
-
-
-        return Self::combineAssessments($assessment_1, $assessment_2);
     }
 
     /**
@@ -283,12 +295,16 @@ class AssessmentController extends Controller
      * @param $assessment_id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function check($assessment_id) {
+    public function check($assessment_id, $json = true) {
         $assessment = Assessment::find($assessment_id);
         if($assessment) {
             $assessments = Assessment::where('final_assessment_id', '=', $assessment->final_assessment_id)->get();
             if($assessments->count() < 2) {
-                return response()->json(array("message"=> "missing"), 405);
+                if($json) {
+                    return response()->json(array("message"=> "missing"), 405);
+                } else {
+                    return false;
+                }
             } else {
                 $finished = true;
                 foreach ($assessments as $assessment) {
@@ -297,12 +313,59 @@ class AssessmentController extends Controller
                     }
                 }
                 if($finished == false) {
-                    return response()->json(array("message" => "unfinished"), 405);
+                    if($json) {
+                        return response()->json(array("message" => "unfinished"), 405);
+                    } else {
+                        return false;
+                    }
                 } else {
-                    //Both are finished
-                    return response()->json(array("message" => "finished"), 200);
+                    if($json) {
+                        return response()->json(array("message" => "finished"), 200);
+                    } else {
+                        return $assessments;
+                    }
                 }
             }
+        } else {
+            return response()->json(array(), 404);
+        }
+    }
+
+    /**
+     * @param $assessment_id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function startFinalAssessment($assessment_id) {
+        $assessment = Assessment::find($assessment_id);
+        if($assessment) {
+            $assessments = Self::check($assessment_id, false);
+            if($assessments) {
+                //both asssessments are finished
+                $finalAssessment = Self::combineAssessments($assessments[0], $assessments[1]);
+
+                if($finalAssessment) {
+                    //Error bij combining the assessments to the FinalAssessment
+                    return response()->json(array(), 500);
+                } else {
+                    return response()->json($finalAssessment, 200);
+                }
+            } else {
+                return response()->json(array(), 405);
+            }
+        } else {
+            return response()->json(array(), 404);
+        }
+    }
+
+    /**
+     * @param $final_assessment_id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getFinalAssessmentById($final_assessment_id) {
+        $finalAssessment = FinalAssessment::find($final_assessment_id);
+
+        if($finalAssessment) {
+            return response()->json($finalAssessment, 200);
         } else {
             return response()->json(array(), 404);
         }

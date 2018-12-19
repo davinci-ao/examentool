@@ -61,3 +61,13 @@ $router->get('/exam/{determined_exam_id}/archive', [
 $router->get('/assessment/{assessment_id}/check', [
     'uses' => 'AssessmentController@check'
 ]);
+
+//Finish Assessment
+$router->get('/assessment/{assessment_id}/finish', [
+    'uses' => 'AssessmentController@finishAssessment'
+]);
+
+//Start final assessment
+$router->get('/finalAssessment/{assessment_id}/start', [
+    'uses' => 'AssessmentController@startFinalAssessment'
+]);

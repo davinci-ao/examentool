@@ -71,3 +71,8 @@ $router->get('/assessment/{assessment_id}/finish', [
 $router->get('/finalAssessment/{assessment_id}/start', [
     'uses' => 'AssessmentController@startFinalAssessment'
 ]);
+
+//Get final assessment by id
+$router->get('/finalAssessment/{final_assessment_id}', [
+   'uses' => 'AssessmentController@getFinalAssessmentById'
+]);

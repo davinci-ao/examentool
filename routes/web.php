@@ -57,10 +57,10 @@ $router->get('/exam/{determined_exam_id}/archive', [
     'uses' => 'DeterminedExamController@archiveExam'
 ]);
 
-$router->get('/assessment/{final_assessment_id}/minutes', [
-    'uses' => 'AssessmentController@getMinutes'
+$router->get('/assessment/{final_assessment_id}/processreport', [
+    'uses' => 'AssessmentController@getProcessReport'
 ]);
 
-$router->put('/assessment/{final_assessment_id}/minutes', [
-    'uses' => 'AssessmentController@setMinutes'
+$router->put('/assessment/{final_assessment_id}/processreport', [
+    'uses' => 'AssessmentController@setProcessReport'
 ]);

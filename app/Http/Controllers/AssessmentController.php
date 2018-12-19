@@ -254,36 +254,36 @@ class AssessmentController extends Controller
     }
 
     /**
-     * Get minutes
+     * Get processReport
      *
      * @param $final_assessment_id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getMinutes($final_assessment_id) {
-        return response()->json(array('minutes' => FinalAssessment::find($final_assessment_id)->minutes), 200);
+    public function getProcessReport($final_assessment_id) {
+        return response()->json(array('processReport' => FinalAssessment::find($final_assessment_id)->processReport), 200);
     }
 
     /**
-     * Set minutes
+     * Set processReport
      *
      * @param $final_assessment_id
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function setMinutes($final_assessment_id, Request $request) {
+    public function setProcessReport($final_assessment_id, Request $request) {
         //Validate request data
         $request_data = $this->validate($request, [
-            'minutes' => 'required'
+            'processReport' => 'required'
         ]);
 
         $final_assessment = FinalAssessment::find($final_assessment_id);
-        $final_assessment->minutes = $request_data['minutes'];
+        $final_assessment->processReport = $request_data['processReport'];
 
         //Update
         if($this->endAssessment($final_assessment_id) and $final_assessment->update()) {
             //Return updated assessment
-            return $this->getMinutes($final_assessment_id);
+            return $this->getProcessReport($final_assessment_id);
         } else {
             //Return 500
             return response()->json(array(), 500);

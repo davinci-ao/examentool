@@ -27,6 +27,6 @@ class Assessment extends Model implements AuthenticatableContract, AuthorizableC
      * @var array
      */
     protected $hidden = [
-        '',
+        'processReport',
     ];
 }

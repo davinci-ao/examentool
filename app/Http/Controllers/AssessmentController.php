@@ -6,6 +6,7 @@ use App\Assessment;
 use App\FinalAssessment;
 use App\DeterminedExam;
 use Illuminate\Http\Request;
+use phpDocumentor\Reflection\Types\Boolean;
 
 class AssessmentController extends Controller
 {
@@ -370,6 +371,43 @@ class AssessmentController extends Controller
             return response()->json(array(), 404);
         }
     }
+  
+    /**
+     * Get processReport
+     *
+     * @param $final_assessment_id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getProcessReport($final_assessment_id) {
+        return response()->json(array('processReport' => FinalAssessment::find($final_assessment_id)->processReport), 200);
+    }
+
+    /**
+     * Set processReport
+     *
+     * @param $final_assessment_id
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function setProcessReport($final_assessment_id, Request $request) {
+        //Validate request data
+        $request_data = $this->validate($request, [
+            'processReport' => 'required'
+        ]);
+
+        $final_assessment = FinalAssessment::find($final_assessment_id);
+        $final_assessment->processReport = $request_data['processReport'];
+
+        //Update
+        if($this->endAssessment($final_assessment_id) and $final_assessment->update()) {
+            //Return updated assessment
+            return $this->getProcessReport($final_assessment_id);
+        } else {
+            //Return 500
+            return response()->json(array(), 500);
+        }
+    }
 
     /**
      * @param Assessment $assessment_1
@@ -439,6 +477,31 @@ class AssessmentController extends Controller
             }
         } else {
             //Assessments are from different Final Assessments
+            return false;
+        }
+    }
+}
+    /**
+     * End assessment
+     *
+     * @param $final_assessment_id
+     * @return Bool
+     */
+    private function endAssessment($final_assessment_id) {
+        $final_assessment = FinalAssessment::find($final_assessment_id);
+        $final_assessment->finished = true;
+
+        $assessments = Assessment::where('final_assessment_id', '=', $final_assessment_id)->get();
+        foreach ($assessments as $assessment) {
+            $assessment->finished = true;
+            if(!$assessment->update()) {
+                return false;
+            }
+        }
+
+        if($final_assessment->update()) {
+            return true;
+        } else {
             return false;
         }
     }

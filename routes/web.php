@@ -76,3 +76,10 @@ $router->get('/finalAssessment/{assessment_id}/start', [
 $router->get('/finalAssessment/{final_assessment_id}', [
    'uses' => 'AssessmentController@getFinalAssessmentById'
 ]);
+$router->get('/assessment/{final_assessment_id}/processreport', [
+    'uses' => 'AssessmentController@getProcessReport'
+]);
+
+$router->put('/assessment/{final_assessment_id}/processreport', [
+    'uses' => 'AssessmentController@setProcessReport'
+]);

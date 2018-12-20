@@ -56,3 +56,30 @@ $router->post('/exam/create', [
 $router->get('/exam/{determined_exam_id}/archive', [
     'uses' => 'DeterminedExamController@archiveExam'
 ]);
+
+//Check if all Assessments for FinalAssessmetn are finished
+$router->get('/assessment/{assessment_id}/check', [
+    'uses' => 'AssessmentController@check'
+]);
+
+//Finish Assessment
+$router->get('/assessment/{assessment_id}/finish', [
+    'uses' => 'AssessmentController@finishAssessment'
+]);
+
+//Start final assessment
+$router->get('/finalAssessment/{assessment_id}/start', [
+    'uses' => 'AssessmentController@startFinalAssessment'
+]);
+
+//Get final assessment by id
+$router->get('/finalAssessment/{final_assessment_id}', [
+   'uses' => 'AssessmentController@getFinalAssessmentById'
+]);
+$router->get('/assessment/{final_assessment_id}/processreport', [
+    'uses' => 'AssessmentController@getProcessReport'
+]);
+
+$router->put('/assessment/{final_assessment_id}/processreport', [
+    'uses' => 'AssessmentController@setProcessReport'
+]);

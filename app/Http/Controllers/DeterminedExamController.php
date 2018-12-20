@@ -78,7 +78,9 @@ class DeterminedExamController extends Controller
             'exam_description' => 'required',
             'exam_cohort' => 'required',
         ]);
+        $data['exam_criteria'] = $request['exam_criteria'];
         $data['active'] = true;
+        $data['editable'] = true;
         if ($determined_exam = DeterminedExam::create($data)) {
             //save created exam, 200
             return response()->json($determined_exam, 200);
@@ -154,7 +156,7 @@ class DeterminedExamController extends Controller
             //Return 404
             return response()->json(new \stdClass(), 404);
         }
-    }
+}
 
 
     /**

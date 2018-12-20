@@ -21,6 +21,7 @@ class DeterminedExams extends Migration
             $collection->string('exam_rating_algorithms');
             $collection->string('exam_criteria');
             $collection->boolean('active');
+            $collection->boolean('editable');
         });
     }
 

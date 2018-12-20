@@ -69,7 +69,7 @@ class AssessmentController extends Controller
      */
     public function getAllFinalAssessments()
     {
-        if($data = FinalAssessment::all()) {
+        if($data = FinalAssessment::where('finished', '=', false)->get()) {
             //return all trimmed Exams, 200
             return response()->json($data, 200);
         } else {

@@ -480,7 +480,7 @@ class AssessmentController extends Controller
             return false;
         }
     }
-}
+
     /**
      * End assessment
      *

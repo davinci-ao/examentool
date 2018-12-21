@@ -58,3 +58,5 @@ Installeer Composer en download project
 13.	Voer daarna het volgende command uit en laat deze draaien (is de server die de backend draait): “php -S localhost:8000 -t public”
 
 De back-end zou nu volledig moeten werken
+ERD:
+![ERD](https://github.com/davinci-ao/examentool/blob/master/erd.png)

@@ -13,7 +13,7 @@ Installeer PHP met MongoDB Plugin:
 5.	Rechts onder in je taakbalk, klik op het wamp icoon (linker muisklik)
  
 
-6.Ga in het menu naar PHP:
+6. Ga in het menu naar PHP:
  
  
 7. Ga naar versie:
